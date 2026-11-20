@@ -84,7 +84,7 @@ body{font-family:var(--font);background:var(--desk);color:var(--ink);display:fle
 </div>
 <script>
 (function(){
-  var HASH = "phistock"; // password
+  var HASH = "d350d79a2e8b1aab1652684cfe09fa8a85909512bde545cb2bb364a1296a3830"; // password: phistock
   var g=document.getElementById("gate");
   function sha(t){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){
     return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")})}
