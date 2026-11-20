@@ -39,7 +39,7 @@ body{font-family:var(--font);background:var(--desk);color:var(--ink);display:fle
 .pic img{display:block;width:100%;max-height:300px;object-fit:contain}
 .row{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
 .sw{width:24px;height:24px;border-radius:50%;border:1px solid rgba(0,0,0,.25)}
-.cn{font-size:18px}
+.cn{font-size:18px;display:flex;align-items:center;gap:10px}.th{width:48px;height:48px;object-fit:cover;border-radius:6px;background:rgba(127,127,127,.15)}
 .qty{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .qty small{display:block;font-size:12px;font-weight:600}
 .qty.low{color:var(--low)} .qty.ok{color:var(--ink)} .qty small.l{color:var(--low)}
@@ -134,7 +134,7 @@ function nextImg(el){var l=JSON.parse(el.getAttribute("data-c")),i=+el.getAttrib
 function sheetHTML(d,sn){
   var tot=d.items.reduce(function(a,b){return a+b.stock},0);
   var rows=d.items.map(function(it){var low=it.stock<=LOW_STOCK_AT;
-    return '<div class="row"><span class="sw" style="background:'+esc(swatch(it.colour))+'"></span><span class="cn">'+esc(it.colour)+
+    return '<div class="row"><span class="sw" style="background:'+esc(swatch(it.colour))+'"></span><span class="cn"><img class="th" alt="" loading="lazy" onerror="this.remove()" src="images/'+encodeURIComponent(d.name)+'_'+esc(it.colour.toUpperCase().replace(/[^A-Z0-9]/g,''))+'.jpg">'+esc(it.colour)+
     '</span><span class="qty '+(low?'low':'ok')+'">'+it.stock.toLocaleString()+(low?'<small class="l">'+(it.stock===0?'Out of stock':'Low')+'</small>':'')+'</span></div>'}).join("");
   var c=imgCandidates(sn,d);
   var pic='<div class="pic"><img alt="Design '+esc(d.name)+'" data-i="0" data-c=\''+esc(JSON.stringify(c)).replace(/'/g,"&#39;")+'\' src="'+esc(c[0])+'" onerror="nextImg(this)"></div>';
