@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runners Stock</title>
+<link rel="stylesheet" href="style.css">
+<script>
+/* Only reachable from the menu after the password. Opening or refreshing this page sends you back to the menu. */
+if(sessionStorage.getItem("go")!=="1"){location.replace("index.html")}else{sessionStorage.removeItem("go")}
+</script>
+</head>
+<body>
+<header class="top">
+<div class="hdr"><a href="index.html" onclick="sessionStorage.setItem('menuok','1')">‹ Menu</a><span>Runners</span></div>
+<div class="bar">
+  <button id="prev" aria-label="Previous design">‹</button>
+  <select id="pick" aria-label="Choose design"></select>
+  <button id="next" aria-label="Next design">›</button>
+</div>
+<div class="tabs" id="tabs"></div>
+</header>
+<main id="view" style="width:100%;display:flex;flex-direction:column;align-items:center"></main>
+<div class="foot" id="foot"></div>
+<script>
+/* ============ SETTINGS FOR THIS PAGE ============ */
+var CFG = {
+  id: "runners",                 // do not change
+  api: "",                // Apps Script web app link (all tabs + photos)
+  csv: "",                // single-sheet CSV link (used only if api is empty)
+  img: "images-runners",                // folder holding this section's photos
+  low: 3,                   // stock at or below this shows as Low
+  refresh: 5                // auto-refresh minutes
+};
+/* ================================================== */
+</script>
+<script src="app.js"></script>
+</body>
+</html>
