@@ -90,12 +90,12 @@ body{font-family:var(--font);background:var(--desk);color:var(--ink);display:fle
   function sha(t){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){
     return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")})}
   function unlock(){document.body.classList.remove("locked");g.hidden=true}
-  if(localStorage.getItem("matpw")===HASH){return}           // already unlocked on this device
-  document.body.classList.add("locked"); g.hidden=false;
+  try{localStorage.removeItem("matpw")}catch(e){}     // clears any password saved by the older version
+  document.body.classList.add("locked"); g.hidden=false;   // always locked when the page loads
   document.getElementById("gf").onsubmit=function(e){
     e.preventDefault();
     sha(document.getElementById("gp").value).then(function(h){
-      if(h===HASH){localStorage.setItem("matpw",h);unlock()}
+      if(h===HASH){unlock()}
       else document.getElementById("ge").textContent="Wrong password"})};
 })();
 </script>
