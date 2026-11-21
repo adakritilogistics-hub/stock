@@ -1,5 +1,6 @@
 var API_URL=CFG.api||"",SHEET_CSV_URL=CFG.csv||"",LOW_STOCK_AT=CFG.low||3,REFRESH_MIN=CFG.refresh||5,CFGIMG=CFG.img;
 var sheets=[],si=0,idx=0,updated=null,serverImgs={},localImgs={};
+var l=document.createElement("link");l.rel="icon";l.href="PHI_LOGO.png";document.head.appendChild(l);
 function isAdmin(){var a=/admin/.test(location.hash+location.search);try{if(a)localStorage.setItem("matadmin","1");else a=localStorage.getItem("matadmin")==="1"}catch(e){}return a}
 var admin=isAdmin();
 window.addEventListener("hashchange",function(){admin=isAdmin();render()});
