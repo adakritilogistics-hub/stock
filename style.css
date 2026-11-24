@@ -6,7 +6,6 @@
 @media (prefers-color-scheme:dark){
   :root{--desk:#14191d; --paper:#222a30; --ink:#eef1f3; --muted:#9aa6ad; --line:#38434b; --accent:#6bb7d4; --low:#ff8a73; --ok:#6fcf97;}
 }
-.logo{display:block;max-width:180px;max-height:90px;margin:0 auto 20px}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 .bar,.tabs,.foot,main,.sheet{flex-shrink:0}
@@ -54,3 +53,20 @@ body{font-family:var(--font);background:var(--desk);color:var(--ink);display:fle
 .hdr{width:100%;max-width:640px;display:flex;align-items:center;justify-content:space-between;padding:10px 12px 0}
 .hdr a{color:var(--accent);text-decoration:none;font-weight:600;padding:6px 4px}
 .hdr span{font-weight:700;font-size:17px}
+[hidden]{display:none !important}
+.choice,.form{width:calc(100% - 24px);max-width:640px;margin:18px 0}
+.choice h2,.form h2{margin:0 0 16px;font-size:22px}
+.choice button{display:block;width:100%;padding:22px;margin-bottom:12px;border-radius:12px;font:inherit;font-size:20px;font-weight:600;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.form{background:var(--paper);padding:22px;border-radius:12px;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.form label{display:block;margin-bottom:14px;color:var(--muted);font-size:14px}
+.form input{display:block;width:100%;margin-top:6px;padding:12px;font:inherit;font-size:16px;border-radius:8px;border:1px solid var(--line);background:var(--desk);color:var(--ink)}
+.form button{display:block;width:100%;margin-top:6px;padding:14px;font:inherit;font-size:17px;font-weight:700;border:0;border-radius:10px;background:var(--accent);color:var(--paper);cursor:pointer}
+.lnk{background:none;border:0;font:inherit;color:var(--accent);font-weight:600;cursor:pointer;padding:6px 4px}
+.savebtn{background:var(--accent);color:var(--paper);border:0;border-radius:8px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.hdr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.row.hu{border-bottom:0;padding-bottom:6px}
+.upd{display:flex;gap:8px;align-items:center;padding:0 0 12px;border-bottom:1px solid var(--line)}
+.uq{width:110px;padding:9px;font:inherit;border-radius:8px;border:1px solid var(--line);background:var(--desk);color:var(--ink)}
+.usave{padding:9px 16px;border-radius:8px;border:0;background:var(--accent);color:var(--paper);font:inherit;font-weight:700;cursor:pointer}
+.usave:disabled{opacity:.5}
+.ust{font-size:13px;color:var(--ok);font-weight:600}
