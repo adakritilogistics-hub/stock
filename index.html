@@ -78,10 +78,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     <h1 id="i1"></h1>
     <p class="lead" id="i2"></p>
     <div class="list">
-      <a href="mats.html" onclick="sessionStorage.setItem('go','1')">Mats</a>
       <a href="runners.html" onclick="sessionStorage.setItem('go','1')">Runners</a>
-      <a href="multidesigns.html" onclick="sessionStorage.setItem('go','1')">MultiDesigns</a>
-      <a href="rwl.html" onclick="sessionStorage.setItem('go','1')">Rolls, Wallpaper and Lace</a>
+      <a href="mats.html" onclick="sessionStorage.setItem('go','1')">Mats</a>
     </div>
     <button class="fin" id="i3">Finish dispatch</button>
   </div>
@@ -109,12 +107,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   var VERIFY_URL="https://script.google.com/macros/s/AKfycbxiCdgjgPmiaYo4A0iSJgkTF9_1hRbNPcNloimvuJi1uYGNKigla60hppK1w-ttMC5z/exec"; // the PIN is checked against this script
   function openForm(){$("f1").value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);show("form")}
   $("h2").onclick=function(){
-    var pin=prompt("Enter PIN to update stock");
+    var pin=prompt("Enter PIN to update stock");if(!pin)return;
+    var OLD="The Apps Script is not the latest version. In Apps Script choose Deploy > Manage deployments > pencil icon > Version: New version > Deploy, then try again.";
     fetch(VERIFY_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"ping",pin:pin})})
-      .then(function(r){return r.json()}).then(function(j){
+      .then(function(r){return r.text()}).then(function(t){
+        var j;try{j=JSON.parse(t)}catch(e){alert(OLD);return}
         if(j.error){alert(j.error);return}
+        if(!j.ok){alert(OLD);return}
         sessionStorage.setItem("pin",pin);openForm()})
-      .catch(function(){alert("Could not reach the server. Check your internet and try again.")})};
+      .catch(function(){alert("Could not connect. Check your internet. If it still fails, the script link may be wrong or its access is not set to Anyone.")})};
   $("f0").onclick=function(){show("home")};
   $("f4").onclick=function(){var a=$("f1").value,b=$("f2").value.trim(),c=$("f3").value.trim();
     if(!a||!b||!c){alert("Please fill the date, customer name and mode.");return}
