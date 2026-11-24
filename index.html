@@ -106,7 +106,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   function route(){var f=sessionStorage.getItem("flow");if((f==="update"&&disp())||f==="check")items();else show("home")}
 
   $("h1").onclick=function(){sessionStorage.setItem("flow","check");items()};
-  var VERIFY_URL="https://script.google.com/macros/s/AKfycbxiCdgjgPmiaYo4A0iSJgkTF9_1hRbNPcNloimvuJi1uYGNKigla60hppK1w-ttMC5z/exec"; // the PIN is checked against this script
+  var VERIFY_URL="https://script.google.com/macros/s/AKfycbyxTv6mb0mvqx3zfVnqBZEz1DD7BZe3N5FkXshVkjstgbyxfdlqB6-ZpRo_EqnjQ0n0/exec"; // the PIN is checked against this script
   function openForm(){$("f1").value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);show("form")}
   $("h2").onclick=function(){
     var pin=prompt("Enter PIN to update stock");if(!pin)return;
