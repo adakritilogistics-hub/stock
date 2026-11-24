@@ -108,16 +108,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   $("h1").onclick=function(){sessionStorage.setItem("flow","check");items()};
   var VERIFY_URL="https://script.google.com/macros/s/AKfycbyxTv6mb0mvqx3zfVnqBZEz1DD7BZe3N5FkXshVkjstgbyxfdlqB6-ZpRo_EqnjQ0n0/exec"; // the PIN is checked against this script
   function openForm(){$("f1").value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);show("form")}
-  $("h2").onclick=function(){
-    var pin=prompt("Enter PIN to update stock");if(!pin)return;
-    var OLD="The Apps Script is not the latest version. In Apps Script choose Deploy > Manage deployments > pencil icon > Version: New version > Deploy, then try again.";
-    fetch(VERIFY_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"ping",pin:pin})})
-      .then(function(r){return r.text()}).then(function(t){
-        var j;try{j=JSON.parse(t)}catch(e){alert(OLD);return}
-        if(j.error){alert(j.error);return}
-        if(!j.ok){alert(OLD);return}
-        sessionStorage.setItem("pin",pin);openForm()})
-      .catch(function(){alert("Could not connect. Check your internet. If it still fails, the script link may be wrong or its access is not set to Anyone.")})};
+  $("h2").onclick=function(){openForm();};
   $("f0").onclick=function(){show("home")};
   $("f4").onclick=function(){var a=$("f1").value,b=$("f2").value.trim(),c=$("f3").value.trim();
     if(!a||!b||!c){alert("Please fill the date, customer name and mode.");return}
