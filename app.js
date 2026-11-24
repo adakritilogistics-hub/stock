@@ -1,6 +1,8 @@
 var API_URL=CFG.api||"",SHEET_CSV_URL=CFG.csv||"",LOW_STOCK_AT=CFG.low||3,REFRESH_MIN=CFG.refresh||5,CFGIMG=CFG.img;
 (function(){var l=document.createElement("link");l.rel="icon";l.href="PHI_LOGO.png";document.head.appendChild(l)})();
-var sheets=[],si=0,idx=0,updated=null,serverImgs={},localImgs={},st="home",sess=null,typed={},notes={};
+var disp=null;try{disp=JSON.parse(sessionStorage.getItem("disp")||"null")}catch(e){}
+var sheets=[],si=0,idx=0,updated=null,serverImgs={},localImgs={},st=(sessionStorage.getItem("flow")==="update"&&disp)?"update":"check",sess=disp,typed={},notes={};
+try{notes=JSON.parse(sessionStorage.getItem("notes_"+CFG.id)||"{}")}catch(e){}
 function isAdmin(){var a=/admin/.test(location.hash+location.search);try{if(a)localStorage.setItem("matadmin","1");else a=localStorage.getItem("matadmin")==="1"}catch(e){}return a}
 var admin=isAdmin();
 window.addEventListener("hashchange",function(){admin=isAdmin();if(st==="check"||st==="update")render()});
@@ -8,6 +10,17 @@ try{localImgs=JSON.parse(localStorage.getItem("imgs_"+CFG.id)||"{}")}catch(e){}
 var $=function(id){return document.getElementById(id)};
 function D(){return sheets[si]?sheets[si].designs:[]}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function addItem(desc,cat,label,qty){
+  var segs=desc?desc.split("\n"):[],found=false,pre=cat+" : ";
+  for(var i=0;i<segs.length;i++){
+    if(segs[i].indexOf(pre)===0){
+      var items=segs[i].slice(pre.length).split(", "),hit=false;
+      for(var j=0;j<items.length;j++){var m=items[j].match(/^(.*) x ([\d.]+)$/);
+        if(m&&m[1]===label){items[j]=label+" x "+(Math.round((parseFloat(m[2])+qty)*1000)/1000);hit=true}}
+      if(!hit)items.push(label+" x "+qty);
+      segs[i]=pre+items.join(", ");found=true;break}}
+  if(!found)segs.push(pre+label+" x "+qty);
+  return segs.join("\n")}
 function post(o){return fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(o)}).then(function(r){return r.json()})}
 
 function parseCSV(t){var rows=[],r=[],c="",q=false;
@@ -68,36 +81,18 @@ function sheetHTML(d,sn,upd){
 
 /* ---------- screens ---------- */
 function setHdr(){var h=$("hdr"),t=esc(CFG.title);
-  if(st==="home")h.innerHTML='<a href="index.html" onclick="sessionStorage.setItem(\'menuok\',\'1\')">‹ Menu</a><span>'+t+'</span>';
-  else if(st==="update"){h.innerHTML='<button class="savebtn" id="hs">Save Stock</button><span>'+esc(sess.customer)+'</span>';
+  if(st==="update"){h.innerHTML='<button class="savebtn" id="hs">Save Stock</button><span>'+esc(sess.customer)+' · '+t+'</span>';
     $("hs").onclick=function(){if(Object.keys(typed).some(function(k){return typed[k]!==""})&&!confirm("Some quantities are typed but not saved. Leave anyway?"))return;
-      sess=null;typed={};notes={};st="home";render()}}
-  else{h.innerHTML='<button class="lnk" id="hb">‹ Back</button><span>'+t+(st==="form"?' · Update':' · Check')+'</span>';$("hb").onclick=function(){st="home";render()}}}
+      sessionStorage.setItem("menuok","1");location.href="index.html"}}
+  else h.innerHTML='<a href="index.html" onclick="sessionStorage.setItem(\'menuok\',\'1\')">‹ Back</a><span>'+t+' · Check</span>'}
 
 function render(){
   setHdr();var ds=D();
-  if(st==="home"||st==="form"){$("bar").hidden=true;$("tabs").innerHTML="";$("foot").textContent="";
-    if(st==="home"){$("view").innerHTML='<div class="choice"><h2>What do you want to do?</h2><button id="c1">Check Stock</button><button id="c2">Update Stock</button></div>';
-      $("c1").onclick=function(){st="check";render()};$("c2").onclick=startUpdate}
-    else{var n=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
-      $("view").innerHTML='<div class="form"><h2>Update stock</h2><label>Date<input id="f1" type="date" value="'+n+'"></label><label>Customer name<input id="f2" type="text" autocomplete="off"></label><label>Mode<input id="f3" type="text" autocomplete="off"></label><button id="f4">Start</button></div>';
-      $("f4").onclick=function(){var a=$("f1").value,b=$("f2").value.trim(),c=$("f3").value.trim();
-        if(!a||!b||!c){alert("Please fill the date, customer name and mode.");return}
-        sess={date:a,customer:b,mode:c};typed={};notes={};st="update";render()}}
-    return}
-  $("bar").hidden=false;
   if(!ds.length){$("view").innerHTML='<div class="msg">Loading…</div>';return}
   $("view").innerHTML=sheetHTML(ds[idx],sheets[si].name,st==="update");
   $("pick").value=idx;$("prev").disabled=idx===0;$("next").disabled=idx===ds.length-1;
   $("tabs").innerHTML=sheets.length>1?sheets.map(function(s,i){return '<button class="'+(i===si?'on':'')+'" onclick="goSheet('+i+')">'+esc(s.name)+'</button>'}).join(""):"";
   $("foot").textContent=(st==="update"?sess.customer+" · "+sess.date+" · "+sess.mode+" — ":"")+(idx+1)+" of "+ds.length+(updated&&st==="check"?" · Updated "+updated.toLocaleString([],{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"")}
-
-function startUpdate(){
-  if(!API_URL){alert("Update Stock is not connected for "+CFG.title+" yet. Ask the admin to add its Apps Script link.");return}
-  var pin=sessionStorage.getItem("pin")||prompt("Enter PIN to update stock");if(!pin)return;
-  post({action:"ping",pin:pin}).then(function(j){
-    if(j.error){sessionStorage.removeItem("pin");alert(j.error);return}
-    sessionStorage.setItem("pin",pin);st="form";render()}).catch(function(){alert("Could not reach the server. Check your internet.")})}
 
 function doSave(i,btn){
   var d=D()[idx],it=d.items[i],sn=sheets[si].name,tk=tkey(sn,d,i),inp=btn.parentNode.querySelector(".uq"),q=parseFloat(inp.value);
@@ -110,7 +105,7 @@ function doSave(i,btn){
   post({action:"consume",pin:pin,sheet:sn,design:d.name,colour:it.c,qty:q,label:label,cat:CFG.title,date:sess.date,customer:sess.customer,mode:sess.mode})
   .then(function(j){
     if(j.error){if(/PIN/.test(j.error))sessionStorage.removeItem("pin");alert(j.error);if(typeof j.available==="number")it.stock=j.available;render();return}
-    it.stock=j.available;delete typed[tk];notes[tk]="✓ "+q+" saved";render()})
+    it.stock=j.available;delete typed[tk];notes[tk]="✓ "+q+" saved";try{sessionStorage.setItem("notes_"+CFG.id,JSON.stringify(notes));sessionStorage.setItem("ddesc",addItem(sessionStorage.getItem("ddesc")||"",CFG.title,label,q))}catch(e){}render()})
   .catch(function(){alert("Could not save. Check your internet, then check the sheet before trying again.");btn.disabled=false;btn.textContent="Save"})}
 
 function fillPicker(){$("pick").innerHTML=D().map(function(d,i){return '<option value="'+i+'">'+esc(d.name)+'</option>'}).join("")}
@@ -124,7 +119,7 @@ function ingest(raw){
   var f=D().map(function(d){return d.name}).indexOf(cd);idx=f>=0?f:0;
   fillPicker();
   var a=document.activeElement;if(a&&a.classList&&a.classList.contains("uq"))return;   // don't disturb typing
-  if(st==="check"||st==="update")render()}
+  render()}
 
 function load(){
   if(!API_URL&&!SHEET_CSV_URL){$("view").innerHTML='<div class="msg">Not connected yet. Add the sheet link to this page.</div>';return}
@@ -137,7 +132,6 @@ function load(){
   }).catch(function(){
     try{var c=JSON.parse(localStorage.getItem("stock_"+CFG.id)||"null");
       if(c&&!sheets.length){updated=new Date(c.at);ingest(c.raw);return}}catch(e){}
-    if(!sheets.length&&st==="home")return;
     if(!sheets.length)$("view").innerHTML='<div class="msg err">Could not load stock. Check your internet and the setup links.</div>'})}
 
 /* ---- add photo (admin only) ---- */
