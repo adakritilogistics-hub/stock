@@ -12,8 +12,8 @@ if(sessionStorage.getItem("go")!=="1"){location.replace("index.html")}else{sessi
 </head>
 <body>
 <header class="top">
-<div class="hdr"><a href="index.html" onclick="sessionStorage.setItem('menuok','1')">‹ Menu</a><span>Runners</span></div>
-<div class="bar">
+<div class="hdr" id="hdr"><a href="index.html" onclick="sessionStorage.setItem('menuok','1')">‹ Menu</a><span>Runners</span></div>
+<div class="bar" id="bar">
   <button id="prev" aria-label="Previous design">‹</button>
   <select id="pick" aria-label="Choose design"></select>
   <button id="next" aria-label="Next design">›</button>
@@ -25,6 +25,7 @@ if(sessionStorage.getItem("go")!=="1"){location.replace("index.html")}else{sessi
 <script>
 /* ============ SETTINGS FOR THIS PAGE ============ */
 var CFG = {
+  title: "Runners",
   id: "runners",                 // do not change
   api: "https://script.google.com/macros/s/AKfycbx85Ti0v8N97D2HaMBFp_ZJtd94ISp-I8GmXca7HjVwwRT02piB7li70rWTEu4_3eIV/exec",                // Apps Script web app link (all tabs + photos)
   csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTCHHvzVyHYA6tEbBRRtrTbVnYWHboeTZbf_FR477QYTStUow-XG9vQqdjFhTy7c88I5_dWhaF3nVF8/pub?output=csv",                // single-sheet CSV link (used only if api is empty)
