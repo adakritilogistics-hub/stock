@@ -115,7 +115,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   $("f6").onclick=function(){var a=$("f1").value,b=$("f2").value.trim(),c=$("f3").value.trim(),d=$("f4").value,e=$("f5").value;
     if(!a||!b){alert("Please fill the date ad customer name");return}
     sessionStorage.setItem("disp",JSON.stringify({date:a,customer:b,mode:c,payment:d,marka:e}));sessionStorage.setItem("flow","update");
-    $("f2").value="";$("f3").value="";items()};
+    $("f2").value="";$("f3").value="";$("f4").value="";$("f5").value="";items()};
   $("i0").onclick=function(){sessionStorage.removeItem("flow");show("home")};
   function clearDispatch(){
     sessionStorage.removeItem("disp");sessionStorage.removeItem("flow");sessionStorage.removeItem("ddesc");sessionStorage.removeItem("pin");
