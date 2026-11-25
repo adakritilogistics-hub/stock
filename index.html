@@ -57,11 +57,12 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 
   <div id="form" class="card" hidden>
     <button class="lnk" id="f0" type="button" style="background:none;color:var(--accent);width:auto;padding:6px 0">‹ Back</button>
-    <h1 style="text-align:left;font-size:22px;margin-bottom:16px">New dispatch</h1>
+    <h1 style="text-align:left;font-size:22px;margin-bottom:16px">New Dispatch</h1>
     <label>Date<input id="f1" type="date"></label>
-    <label>Customer name<input id="f2" type="text" autocomplete="off"></label>
+    <label>Customer Name<input id="f2" type="text" autocomplete="off"></label>
     <label>Mode<input id="f3" type="text" autocomplete="off"></label>
-    <button id="f4" type="button">Start</button>
+    <label>Payment<input id="f4" type="number" step="0.01" autocomplete="off"></label>
+    <button id="f5" type="button">Start</button>
   </div>
 
   <div id="sum" class="card" hidden>
