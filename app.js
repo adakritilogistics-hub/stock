@@ -102,7 +102,7 @@ function doSave(i,btn){
   if(!confirm("Reduce "+label+" by "+q+"?\nAvailable: "+it.stock+" → "+(+(it.stock-q).toFixed(3))))return;
   var pin=sessionStorage.getItem("pin")||prompt("Enter PIN");if(!pin)return;
   btn.disabled=true;btn.textContent="Saving…";
-  post({action:"consume",pin:pin,sheet:sn,design:d.name,colour:it.c,qty:q,label:label,cat:CFG.title,date:sess.date,customer:sess.customer,mode:sess.mode})
+  post({action:"consume",pin:pin,sheet:sn,design:d.name,colour:it.c,qty:q,label:label,cat:CFG.title,date:sess.date,customer:sess.customer,mode:sess.mode,payment:sess.payment||"",marka:sess.marka||""})
   .then(function(j){
     if(j.error){if(/PIN/.test(j.error))sessionStorage.removeItem("pin");alert(j.error);if(typeof j.available==="number")it.stock=j.available;render();return}
     sessionStorage.setItem("pin",pin);it.stock=j.available;delete typed[tk];notes[tk]="✓ "+q+" saved";try{sessionStorage.setItem("notes_"+CFG.id,JSON.stringify(notes));sessionStorage.setItem("ddesc",addItem(sessionStorage.getItem("ddesc")||"",CFG.title,label,q))}catch(e){}render()})
