@@ -122,7 +122,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     Object.keys(sessionStorage).forEach(function(k){if(k.indexOf("notes_")===0)sessionStorage.removeItem(k)})}
   function fmt(iso){var p=iso.split("-");return p[2]+"-"+p[1]+"-"+p[0]}
   function summaryText(){var d=disp();
-    return "Date - "+fmt(d.date)+"\nCustomer Name - "+d.customer+"\nMode - "+d.mode+"\nDescription - "+(sessionStorage.getItem("ddesc")||"")}
+  return "Date - "+fmt(d.date)+"\nCustomer Name - "+d.customer+"\nMode - "+d.mode+(d.payment?"\nPayment - "+d.payment:"")+(d.marka?"\nMarka - "+d.marka:"")+"\nDescription - "+(sessionStorage.getItem("ddesc")||"")}
   $("i3").onclick=function(){
     if(!sessionStorage.getItem("ddesc")){
       if(!confirm("No items were saved in this dispatch. Finish anyway?"))return;
